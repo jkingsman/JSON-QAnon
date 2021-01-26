@@ -10,11 +10,13 @@ Posts reference images which I have opted not to include in this repo due to the
 
 Took me about two hours for a total mirror on a terrible hotel wifi using a one second pause between requests; yours will probably go much faster on good internet (but remember to be a good netizen and rate limit requests, especially to a non-API. Depending on how low of a profile you want to keep, bump up the `--wait=1` option higher to wait more than one second between each request).
 
-To run your own extraction, update `DIRECTORY` in `collate.py` to point at the HTML location after mirroring, enter a `venv` and install the `requirements.txt`, then let it rip. It will dump the results as a JSON array to `posts.json` (should take a few seconds).
-
-Clone this repo, then run:
+To run your own extraction, mirorr the site, update `DIRECTORY` in `collate.py` to point at the HTML location after mirroring, enter a `venv` and install the `requirements.txt`, then let it rip. It will dump the results as a JSON array to `posts.json` (should take a few seconds).
 
 ```bash
+# repo clone
+git clone git@github.com:jkingsman/JSON-QAnon.git
+cd JSON-QAnon
+
 # setup + installation
 python3 -m venv venv
 source venv/bin/activate
