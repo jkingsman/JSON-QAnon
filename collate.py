@@ -171,6 +171,8 @@ for entry in os.scandir(DIRECTORY):
 
         collected_posts.append(collated_post)
 
+# sort by date asc
+collected_posts.sort(key=lambda post: post['post_metadata']['time'])
 
 # just a little pretty printing :)
 with open('posts.json', 'w') as outfile:
