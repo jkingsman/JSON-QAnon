@@ -81,11 +81,23 @@ def extract_body(post_block, is_ref=False):
             post_block_copy = content_div
     except AttributeError:
         pass
+
+    # this is noise or embedded posts; regardless, we don't want them
     divs = post_block_copy.findAll('div')
     for div in divs:
         div.decompose()
 
-    return post_block_copy.get_text(separator="\n")
+    # unwrap abbreviations because bs4 thinks they need a separator
+    abbrs = post_block_copy.findAll('abbr')
+    for abbr in abbrs:
+        abbr.unwrap()
+
+    # get your pitchforks ready. I don't know why bs4 behaves this way but for some reason
+    # it's throwing separators where there shouldn't be after unwrapping the abbrs
+    # but extracting and reparsing seems to fix it. I hate it, I don't understand it,
+    # it works, it stays.
+    post_block_copy_duplicate = BeautifulSoup(str(post_block_copy), 'html.parser')
+    return post_block_copy_duplicate.get_text(separator="\n")
 
 
 def extract_references(post_block):
@@ -128,7 +140,7 @@ def clean_up_emails(post):
 collected_posts = []
 for entry in os.scandir(DIRECTORY):
     # helpful for debugging
-    # if entry.name != '64.html':
+    # if entry.name != '104.html':
     #     continue
 
     soup = BeautifulSoup(open(entry.path), 'html.parser')
