@@ -39,7 +39,7 @@ The JSON takes the form of an array of `post` objects. A post consists of:
 
 * `post_metadata`: an object containing misc. information about the post (object)
   * `author`: the author of the post; usually `Q` or `Anonymous` (string)
-  * `source`: an object containing information about the post's origin
+  * `source`: an object containing information about the post's origin (object)
     * `board`: the chan board the post came from (string)
     * `site`: one of `4ch`, `8ch`, or `8kun`, indicating the site the post is from (4chan, 8chan, or 8kun) (string)
     * `link`: link to the original post (optional) (string)
