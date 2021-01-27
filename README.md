@@ -55,6 +55,10 @@ The JSON takes the form of an array of `post` objects. A post consists of:
     * `file`: the name of the image file itself as archived from https://qposts.online (string)
     * `name`: the name of the image as it was named when posted to the image board (string)
 
+### Debugging
+
+If the `scrape_metadata` key is enabled (handy for debugging as it tells you the post ID and the HTML file that particular post was pulled from), that is a mandatory object (when the addition lines are uncommented) containing `file` (string of the filename the post was pulled from) and `id` (integer of the numerical ID of the post, sequentially from the first post -- open the HTML and you'll see what I mean). These can be combined with the other commented-out blocks containing `helpful for debugging` which can restrict the parsing to a single post from a single file, helpful for debugging extraction/formatting/etc.
+
 ## Misc. Analysis Snippets
 
 ### Extract All to File
