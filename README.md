@@ -2,7 +2,7 @@
 
 # QAnon Post Dataset
 
-In `posts.json` is an archive of all QAnon posts as scraped from https://qposts.online as of Jan 25 2021. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`. I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 4k posts so caveat emptor; I make no guarantees of data integrity.
+In `posts.json` is an archive of all QAnon posts as scraped from https://qposts.online as of Jan 25 2021. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`). I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 4k posts so caveat emptor; I make no guarantees of data integrity.
 
 Posts reference images which I have opted not to include in this repo due to their distasteful content; the text is already quite enough and then some. You should be able to download the images with the mirror script below if you so desire; the `file` in `images` refers to the filename of the image as referred to by https://qposts.online at the time of indexing. There are about 800MB of images. I cannot speak to the durability of these image filename references but they will be accurate if you run the extraction yourself (i.e. if the file naming scheme is changed, this script will pick it up).
 
