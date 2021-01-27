@@ -33,7 +33,7 @@ wget --wait=1 --level=inf --recursive --page-requisites --no-parent --convert-li
 
 ## Schema
 
-Actual JSON schemas give me a headache, so here it is in markdown form. If someone is really desperate for a JSON schema, I can probably scrape something together. This schema assumes all keys are on all objects unless it is stated as optional.
+Actual JSON schemas give me a headache, so here it is in markdown form. If someone is really desperate for a JSON schema, I can probably scrape something together. This schema assumes all keys are mandatory unless labeled as optional.
 
 The JSON takes the form of an array of `post` objects. A post consists of:
 
