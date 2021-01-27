@@ -22,9 +22,7 @@ def extract_metadata_block(meta_container):
 
     # extract the bold/strong text -- i.e. the main name
     author = author_container.find('strong').getText()
-    if not len(author):
-        print('NAME NOT FOUND!', file=sys.stderr)
-        exit()
+    assert len(author) > 0, 'Author name not found!!'
     collated_metadata['author'] = author
 
     # remove the main name, leaving only the tripcode if applicable (and strip l/r whitespace)
@@ -38,9 +36,7 @@ def extract_metadata_block(meta_container):
 
     # extract the bold/strong text -- i.e. the board name
     board = source_container.find('strong').getText()
-    if not len(board):
-        print('BOARD NOT FOUND!', file=sys.stderr)
-        exit()
+    assert len(board) > 0, 'Board name not found!!'
     collated_metadata['source'] = {}
     collated_metadata['source']['board'] = board
 
@@ -55,11 +51,8 @@ def extract_metadata_block(meta_container):
 
     # we've extracted board name and link if we have it; all that's left is the site
     site = source_container.getText().strip()
-    if site:
-        collated_metadata['source']['site'] = site
-    else:
-        print('SITE NOT FOUND!', file=sys.stderr)
-        exit()
+    assert site, 'Site not found!!'
+    collated_metadata['source']['site'] = site
 
     # attach timestamp
     collated_metadata['time'] = int(meta_container.find('span', 'time').getText())
