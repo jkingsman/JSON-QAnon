@@ -87,10 +87,12 @@ def extract_body(post_block, is_ref=False):
     for div in divs:
         div.decompose()
 
-    # unwrap abbreviations because bs4 thinks they need a separator
-    abbrs = post_block_copy.findAll('abbr')
-    for abbr in abbrs:
-        abbr.unwrap()
+    # bs4 thinks these tags need a separator; who knows why
+    tags_to_unwrap = ['abbr', 'em']
+    for tag_to_unwrap in tags_to_unwrap:
+        instances = post_block_copy.findAll(tag_to_unwrap)
+        for instance in instances:
+            instance.unwrap()
 
     # get your pitchforks ready. I don't know why bs4 behaves this way but for some reason
     # it's throwing separators where there shouldn't be after unwrapping the abbrs
@@ -140,7 +142,7 @@ def clean_up_emails(post):
 collected_posts = []
 for entry in os.scandir(DIRECTORY):
     # helpful for debugging
-    # if entry.name != '104.html':
+    # if entry.name != '1.html':
     #     continue
 
     soup = BeautifulSoup(open(entry.path), 'html.parser')
@@ -155,6 +157,9 @@ for entry in os.scandir(DIRECTORY):
         #     'file': entry.name,
         #     'id': int(post.find('div', 'meta').find('span', 'num').getText())
         # }
+        #
+        # if collated_post['scrape_metadata']['id'] != 4939:
+        #     continue
 
         # yank metadata
         meta_container = post.find('div', 'meta')
