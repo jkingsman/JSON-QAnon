@@ -22,9 +22,9 @@ def extract_metadata_block(meta_container):
 
     # remove the base name, leaving the tripcode if applicable
     author_container.find('strong').decompose()
-    tripcode_or_empty = author_container.getText().strip()
-    if tripcode_or_empty:
-        collated_metadata['tripcode'] = tripcode_or_empty
+    maybe_tripcode = author_container.getText().strip()
+    if maybe_tripcode:
+        collated_metadata['tripcode'] = maybe_tripcode
 
     # extract source + board
     source_container = meta_container.find('span', 'source')
@@ -39,10 +39,10 @@ def extract_metadata_block(meta_container):
     source_container.find('strong').decompose()
 
     # get thread link if we have it
-    thread_link_or_empty = source_container.find('a')
-    if thread_link_or_empty:
-        collated_metadata['source']['link'] = thread_link_or_empty['href']
-        thread_link_or_empty.decompose()
+    maybe_thread_link = source_container.find('a')
+    if maybe_thread_link:
+        collated_metadata['source']['link'] = maybe_thread_link['href']
+        maybe_thread_link.decompose()
 
     site = source_container.getText().strip()
     if site:
@@ -71,7 +71,8 @@ def extract_images(post_block):
 
 
 def extract_body(post_block, is_ref=False):
-    # do decomposition with a local copy -- not sure if this is necessary
+    # do decomposition with a local copy so we're not decomposing things we'll need later that might
+    # have refs etc. Not sure if this is necessary
     post_block_copy = copy.copy(post_block)
 
     try:
@@ -87,17 +88,16 @@ def extract_body(post_block, is_ref=False):
     for div in divs:
         div.decompose()
 
-    # bs4 thinks these tags need a separator; who knows why
+    # bs4 thinks these tags need a separator; who knows why -- unwrapping solves it
     tags_to_unwrap = ['abbr', 'em']
     for tag_to_unwrap in tags_to_unwrap:
         instances = post_block_copy.findAll(tag_to_unwrap)
         for instance in instances:
             instance.unwrap()
 
-    # get your pitchforks ready. I don't know why bs4 behaves this way but for some reason
-    # it's throwing separators where there shouldn't be after unwrapping the abbrs
-    # but extracting and reparsing seems to fix it. I hate it, I don't understand it,
-    # it works, it stays.
+    # get your pitchforks ready. I don't know why bs4 behaves this way but for some reason it's
+    # throwing separators where there shouldn't be after unwrapping the abbrs but extracting and
+    # reparsing seems to fix it. I hate it; I don't understand it; it works; it stays.
     post_block_copy_duplicate = BeautifulSoup(str(post_block_copy), 'html.parser')
     return post_block_copy_duplicate.get_text(separator="\n")
 
@@ -124,9 +124,9 @@ def extract_references(post_block):
     return collated_refs
 
 
-# this is so dumb but the author uses a server-side email protection
-# script, I guess for anti-spam, but it's a little overzealous. Thankfully, usage is
-# minimal so I just wrote a function to slot them in from the known list
+# This a dumb way to handle this but the author uses a server-side email protection script (I guess
+# for anti-spam) but it's a little overzealous. Thankfully, usage is minimal so I just wrote a
+# function to slot them in from the known list.
 def clean_up_emails(post):
     if post['post_metadata']['time'] == 1526767434:
         post['post_metadata']['author'] = 'NowC@mesTHEP@in—-23!!!'
