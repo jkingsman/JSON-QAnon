@@ -3,10 +3,15 @@
 import copy
 import json
 import os
+import re
 
 from bs4 import BeautifulSoup
 
+# location of 1.htm, 2.htm, etc.
 PAGES_DIRECTORY = 'qposts.online/page'
+
+# when False, trim stray whitepaces from links in posts+refs; see explanation in clean_up_raw_text()
+KEEP_ORIGINAL_WHITESPACE = False
 
 
 def extract_metadata_block(meta_container):
@@ -123,19 +128,9 @@ def extract_body(post_block, is_ref=False):
     # reparsing seems to fix it. I hate it; I don't understand it; it works; it stays.
     post_block_copy_duplicate = BeautifulSoup(str(post_block_copy), 'html.parser')
 
-    # extract text and apply some minor corrections due to link formatting
     raw_post_text = post_block_copy_duplicate.get_text(separator="\n")
-    known_corrections = [
-        ('https:// ', 'https://'),
-        ('http:// ', 'http://'),
-        ('twitter. com', 'twitter.com'),
-        ('theguardian. com', 'theguardian.com'),
-    ]
 
-    for search, replacement in known_corrections:
-        raw_post_text = raw_post_text.replace(search, replacement)
-
-    return raw_post_text
+    return clean_up_raw_text(raw_post_text)
 
 
 def extract_references(post_block):
@@ -160,7 +155,7 @@ def extract_references(post_block):
         # extract reference text if we have it
         maybe_text = extract_body(ref, is_ref=True)
         if maybe_text:
-            collated_ref['text'] = maybe_text
+            collated_ref['text'] = clean_up_raw_text(maybe_text)
 
         # extract the reference's image if we have any
         maybe_images = extract_images(ref)
@@ -174,11 +169,12 @@ def extract_references(post_block):
 
 def clean_up_emails(post):
     """
-    This a dumb way to handle this but the author uses a server-side email protection script (I
-    guess for anti-spam) and it's a little overzealous. Thankfully, usage is minimal so I just wrote
-    a function to slot them in from the known list. If significantly more posts are added that trip
-    the protection system or it changes (or the timestamps are changed but I assume those to be
-    immutable) this will need additional TLC.
+    This a dumb way to handle this but the post site uses a server-side email protection script (I
+    guess for anti-spam) and it's a little overzealous (note this does not show up in the original
+    Q posts; these are an artifact introduced by the current host I'm scraping from). Thankfully,
+    usage is minimal so I just wrote a function to slot them in from the known list. If
+    significantly more posts are added that trip the protection system or it changes (or the
+    timestamps are changed but I assume those to be immutable) this will need additional TLC.
     """
 
     if post['post_metadata']['time'] == 1526767434:
@@ -191,6 +187,34 @@ def clean_up_emails(post):
                                             '18/part1/chapter115&edition=prelim')
 
     return post
+
+
+def clean_up_raw_text(text):
+    """
+    This corrects some minor oddities in spacing/link text. These show up in the original posts
+    (as far as I can tell) so removing them technically changes the content of original or
+    referenced posts. If this is an issue, set KEEP_ORIGINAL_WHITESPACE to True and this will be
+    short-circuited.
+    """
+
+    if KEEP_ORIGINAL_WHITESPACE:
+        return text
+
+    http_whitespace_regex = re.compile(r"http:\/\/\s+")
+    text = http_whitespace_regex.sub('http://', text)
+
+    https_whitespace_regex = re.compile(r"https:\/\/\s+")
+    text = https_whitespace_regex.sub('https://', text)
+
+    misc_spaced_url_corrections = [
+        ('twitter. com', 'twitter.com'),
+        ('theguardian. com', 'theguardian.com'),
+    ]
+
+    for search, replacement in misc_spaced_url_corrections:
+        text = text.replace(search, replacement)
+
+    return text
 
 
 collected_posts = []
