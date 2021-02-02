@@ -2,7 +2,7 @@
 
 # QAnon Post Dataset
 
-In `posts.json` is an archive of all QAnon posts as scraped from https://qposts.online as of Jan 25 2021. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`. I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 4k posts so caveat emptor; I make no guarantees of data integrity.
+In `posts.json` is an archive of all QAnon posts as scraped from https://qposts.online as of Jan 25 2021. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`). I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 4k posts so caveat emptor; I make no guarantees of data integrity.
 
 Posts reference images which I have opted not to include in this repo due to their distasteful content; the text is already quite enough and then some. You should be able to download the images with the mirror script below if you so desire; the `file` in `images` refers to the filename of the image as referred to by https://qposts.online at the time of indexing. There are about 800MB of images. I cannot speak to the durability of these image filename references but they will be accurate if you run the extraction yourself (i.e. if the file naming scheme is changed, this script will pick it up).
 
@@ -10,7 +10,7 @@ Posts reference images which I have opted not to include in this repo due to the
 
 Took me about two hours for a total mirror on a terrible hotel wifi using a one second pause between requests; yours will probably go much faster on good internet (but remember to be a good netizen and rate limit requests, especially to a non-API. Depending on how low of a profile you want to keep, bump up the `--wait=1` option higher to wait more than one second between each request).
 
-To run your own extraction, mirorr the site, update `DIRECTORY` in `collate.py` to point at the HTML location after mirroring, enter a `venv` and install the `requirements.txt`, then let it rip. It will dump the results as a JSON array to `posts.json` (should take a few seconds).
+To run your own extraction, mirror the site, update `DIRECTORY` in `collate.py` to point at the HTML location after mirroring, enter a `venv` and install the `requirements.txt`, then let it rip. It will dump the results as a JSON array to `posts.json` (should take a few seconds).
 
 ```bash
 # repo clone
