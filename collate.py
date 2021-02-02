@@ -122,7 +122,20 @@ def extract_body(post_block, is_ref=False):
     # throwing separators where there shouldn't be after unwrapping the abbrs but extracting and
     # reparsing seems to fix it. I hate it; I don't understand it; it works; it stays.
     post_block_copy_duplicate = BeautifulSoup(str(post_block_copy), 'html.parser')
-    return post_block_copy_duplicate.get_text(separator="\n")
+
+    # extract text and apply some minor corrections due to link formatting
+    raw_post_text = post_block_copy_duplicate.get_text(separator="\n")
+    known_corrections = [
+        ('https:// ', 'https://'),
+        ('http:// ', 'http://'),
+        ('twitter. com', 'twitter.com'),
+        ('theguardian. com', 'theguardian.com'),
+    ]
+
+    for search, replacement in known_corrections:
+        raw_post_text = raw_post_text.replace(search, replacement)
+
+    return raw_post_text
 
 
 def extract_references(post_block):
