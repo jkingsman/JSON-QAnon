@@ -40,6 +40,7 @@ Actual JSON schemas give me a headache, so here it is in markdown form. If someo
 The JSON takes the form of an array of `post` objects. A post consists of:
 
 * `post_metadata`: an object containing misc. information about the post (object)
+  * `id`: the numerical ID of the post (sequentially up from 1) (integer)
   * `author`: the author of the post; usually `Q` or `Anonymous` (string)
   * `source`: an object containing information about the post's origin (object)
     * `board`: the chan board the post came from (string)

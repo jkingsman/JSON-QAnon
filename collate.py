@@ -62,6 +62,9 @@ def extract_metadata_block(meta_container):
     # attach timestamp
     collated_metadata['time'] = int(meta_container.find('span', 'time').getText())
 
+    # attach id
+    collated_metadata['id'] = int(meta_container.find('span', 'num').getText())
+
     return collated_metadata
 
 
