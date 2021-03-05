@@ -76,7 +76,7 @@ cat posts.json | jq --raw-output '.[].text | select(.)' > aggregated.txt
 
 To get the top ten domains, we'll first extract the post body and `grep` for all URL-like structures. Then we'll use `awk` to set both `:` and `/` as field separators and extract the fourth field (the domain). Then we'll use the common idiom of `sort | uniq -c | sort -nr`: `sort` will alphabetically sort the posts so that `uniq -c` can count the number of unique occurrences (in actuality `uniq -c` only provides a count of line repeats, but since it's sorted the number of repeats will be the number of times the unique line occurred) and then `sort -nr` will sort `n`umerically in `r`everse order, giving us occurences listed by descending count. Finally, `head -10` will extract the first ten lines from the results.
 
-```
+```bash
 cat posts.json |
     jq --raw-output '.[].text | select(.)' |
     grep -Eo "(http\S*)" |
