@@ -203,12 +203,15 @@ def clean_up_raw_text(text):
     if KEEP_ORIGINAL_WHITESPACE:
         return text
 
+    # eliminate spaces after http://
     http_whitespace_regex = re.compile(r"http:\/\/\s+")
     text = http_whitespace_regex.sub('http://', text)
 
+    # eliminate spaces after https://
     https_whitespace_regex = re.compile(r"https:\/\/\s+")
     text = https_whitespace_regex.sub('https://', text)
 
+    # tuples of find/replace for known bad URLs
     misc_spaced_url_corrections = [
         ('twitter. com', 'twitter.com'),
         ('theguardian. com', 'theguardian.com'),
@@ -235,20 +238,18 @@ for entry in os.scandir(PAGES_DIRECTORY):
 
     for post in posts:
         collated_post = {}
-        # # helpful for debugging -- append src file + post ID to the post obj under scrape_metadata
-        # collated_post['scrape_metadata'] = {
-        #     'file': entry.name,
-        #     'id': int(post.find('div', 'meta').find('span', 'num').getText())
-        # }
-
-        # # helpful for debugging -- skip all posts but this ID
-        # # requires scrape_metadata to be appended above
-        # if collated_post['scrape_metadata']['id'] != 4939:
-        #     continue
 
         # yank metadata
         meta_container = post.find('div', 'meta')
         collated_post['post_metadata'] = extract_metadata_block(meta_container)
+
+        # # helpful for debugging -- append src file to metadata
+        # collated_post['post_metadata']['filename'] = entry.name
+
+        # # helpful for debugging -- skip all posts but this ID
+        # # requires scrape_metadata to be appended above
+        # if collated_post['post_metadata']['id'] != 4939:
+        #     continue
 
         # break out main meat of the post for easier manipulation
         post_body = post.find('div', 'message')
@@ -268,7 +269,7 @@ for entry in os.scandir(PAGES_DIRECTORY):
         if referenced_posts:
             collated_post['referenced_posts'] = referenced_posts
 
-        # clean up emails -- see func comment; this maximum clowntown
+        # clean up emails -- see func comment; this is maximum clowntown
         collated_post = clean_up_emails(collated_post)
 
         # attach to big list
