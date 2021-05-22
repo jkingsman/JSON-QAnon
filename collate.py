@@ -6,6 +6,7 @@ import os
 import re
 
 from bs4 import BeautifulSoup
+import yaml
 
 # location of 1.htm, 2.htm, etc.
 PAGES_DIRECTORY = 'qposts.online/page'
@@ -225,7 +226,12 @@ def clean_up_raw_text(text):
 
 collected_posts = []
 # loop through all html files in the directory to be scanned
+entry_count = len(os.listdir(PAGES_DIRECTORY))
+current_entry = 1
 for entry in os.scandir(PAGES_DIRECTORY):
+    print(f"Processing entry {current_entry} of {entry_count}")
+    current_entry += 1
+
     # # helpful for debugging -- skip all files but this one
     # if entry.name != '1.html':
     #     continue
@@ -280,5 +286,10 @@ collected_posts.sort(key=lambda post: post['post_metadata']['time'])
 
 # pretty print and dump it
 # if you're desperate, removing indent=2 shaves a half meg off
+keyed_list = {"posts": collected_posts}
+
+with open('posts.yml', 'w') as outfile:
+    yaml.dump(keyed_list, outfile, allow_unicode=True)
+
 with open('posts.json', 'w') as outfile:
-    json.dump(collected_posts, outfile, indent=2, ensure_ascii=False)
+    json.dump(keyed_list, outfile, indent=2, ensure_ascii=False)
