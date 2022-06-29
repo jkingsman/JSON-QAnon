@@ -288,8 +288,10 @@ collected_posts.sort(key=lambda post: post['post_metadata']['time'])
 # if you're desperate, removing indent=2 shaves a half meg off
 keyed_list = {"posts": collected_posts}
 
+print(f"Dumping YAML")
 with open('posts.yml', 'w') as outfile:
     yaml.dump(keyed_list, outfile, allow_unicode=True)
 
+print(f"Dumping JSON")
 with open('posts.json', 'w') as outfile:
     json.dump(keyed_list, outfile, indent=2, ensure_ascii=False)
