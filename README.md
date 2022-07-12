@@ -26,7 +26,8 @@ pip install -r requirements.txt
 chmod +x collate.py
 
 # site mirroring
-wget --wait=1 --level=inf --recursive --page-requisites --no-parent --convert-links --adjust-extension --no-clobber --restrict-file-names=windows -e robots=off https://qposts.online/
+# note that you'll need to remove the rejected image formats if you also want to archive the images
+wget --wait=1 --level=inf --recursive --page-requisites --no-parent --reject css,js,json,ico,svg,jpg,jpeg,png --convert-links --adjust-extension --no-clobber --restrict-file-names=windows -e robots=off https://qposts.online/
 
 # collation; results in posts.json
 # remember to update DIRECTORY if the posts aren't in ./qposts.online/page relative to the script
