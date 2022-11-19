@@ -15,7 +15,7 @@ PAGES_DIRECTORY = 'qposts.online/page'
 KEEP_ORIGINAL_WHITESPACE = False
 
 
-def extract_metadata_block(meta_container):
+def extract_metadata_block(meta_block):
     """
     Extracts author + tripcode, source site + board, and link if applicable.
     Returns an object of what it finds.
@@ -24,7 +24,7 @@ def extract_metadata_block(meta_container):
     collated_metadata = {}
 
     # extract the span with the name+tripcode in it
-    author_container = meta_container.find('span', 'name')
+    author_container = meta_block.find('span', 'name')
 
     # extract the bold/strong text -- i.e. the main name
     author = author_container.find('strong').getText()
@@ -38,7 +38,7 @@ def extract_metadata_block(meta_container):
         collated_metadata['tripcode'] = maybe_tripcode
 
     # extract source board + site block
-    source_container = meta_container.find('span', 'source')
+    source_container = meta_block.find('span', 'source')
 
     # extract the bold/strong text -- i.e. the board name
     board = source_container.find('strong').getText()
@@ -61,10 +61,10 @@ def extract_metadata_block(meta_container):
     collated_metadata['source']['site'] = site
 
     # attach timestamp
-    collated_metadata['time'] = int(meta_container.find('span', 'time').getText())
+    collated_metadata['time'] = int(meta_block.find('span', 'time').getText())
 
     # attach id
-    collated_metadata['id'] = int(meta_container.find('span', 'num').getText())
+    collated_metadata['id'] = int(meta_block.find('span', 'num').getText())
 
     return collated_metadata
 
@@ -87,13 +87,11 @@ def extract_images(post_block):
     } for image in images]
 
 
-def extract_body(post_block, is_ref=False):
+def extract_body(post_block):
     """
     Extracts the main body text as plaintext less any referenced divs, images, html tags, etc.
     Returns a string; newlines indicated by literal \n.
-    """
 
-    """
     During body extraction, I decompose a number of elements (including divs, which contain post
     references) which basically vaporizes them. Since we need the (post) references later to extract
     and python is pass by reference*, we need to duplicate the object.
@@ -157,7 +155,7 @@ def extract_references(post_block):
         collated_ref['reference'] = ref.previous_sibling.getText()
 
         # extract reference text if we have it
-        maybe_text = extract_body(ref, is_ref=True)
+        maybe_text = extract_body(ref)
         if maybe_text:
             collated_ref['text'] = clean_up_raw_text(maybe_text)
 
@@ -171,7 +169,7 @@ def extract_references(post_block):
     return collated_refs
 
 
-def clean_up_emails(post):
+def clean_up_emails(post_block):
     """
     This a dumb way to handle this but the post site uses a server-side email protection script (I
     guess for anti-spam) and it's a little overzealous (note this does not show up in the original
@@ -181,16 +179,16 @@ def clean_up_emails(post):
     timestamps are changed but I assume those to be immutable) this will need additional TLC.
     """
 
-    if post['post_metadata']['time'] == 1526767434:
-        post['post_metadata']['author'] = 'NowC@mesTHEP@in—-23!!!'
+    if post_block['post_metadata']['time'] == 1526767434:
+        post_block['post_metadata']['author'] = 'NowC@mesTHEP@in—-23!!!'
 
     # Q sure liked this link; three separate posts using it
-    if post['post_metadata']['time'] in [1588693786, 1585242439, 1553795409]:
-        post['text'] = post['text'].replace('email\xa0protected]',
+    if post_block['post_metadata']['time'] in [1588693786, 1585242439, 1553795409]:
+        post_block['text'] = post_block['text'].replace('email\xa0protected]',
                                             'https://uscode.house.gov/view.xhtml?path=/prelim@title'
                                             '18/part1/chapter115&edition=prelim')
 
-    return post
+    return post_block
 
 
 def clean_up_raw_text(text):
@@ -288,10 +286,10 @@ collected_posts.sort(key=lambda post: post['post_metadata']['time'])
 # if you're desperate, removing indent=2 shaves a half meg off
 keyed_list = {"posts": collected_posts}
 
-print(f"Dumping YAML")
+print("Dumping YAML")
 with open('posts.yml', 'w') as outfile:
     yaml.dump(keyed_list, outfile, allow_unicode=True)
 
-print(f"Dumping JSON")
+print("Dumping JSON")
 with open('posts.json', 'w') as outfile:
     json.dump(keyed_list, outfile, indent=2, ensure_ascii=False)
