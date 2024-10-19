@@ -114,7 +114,7 @@ I provide this data for data analysis use only; the content is distasteful and m
 
 The site itself is laid out mostly logically in terms of HTML and formatting so I have high hopes for consistency over time as it pertains to the screen scraping, but should it change dramatically, this extraction script will obviously break. I've tried to lay the script out as modularly as I can so that updates can be made with a reasonable amount of effort but I make no guarantees of durability, nor that I will have time or interest to update the script to stay current, to be brutally honest.
 
-The code in my extraction script is licensed under MIT (and please cite me if my script or its results is utilized as part of academic research -- I'd love to read a preprint!); as the extracted posts are not my content, I cannot license them in any degree.
+The code in my extraction script and any other original components of this repo are licensed under MIT (and please cite me if my script or its results is utilized as part of academic research -- I'd love to read a preprint!); as the extracted posts are not my content, I cannot license them in any degree.
 
 ## Cite this work
 
@@ -127,6 +127,7 @@ author={Kingsman, Jack},
 year={2023},
 url={https://github.com/jkingsman/JSON-QAnon},
 month={Jan},
+doi="10.13140/RG.2.2.28778.32964",
 note={{\url{https://www.kaggle.com/datasets/jkingsman/qanondrops}}}
 }
 ```

@@ -12,6 +12,9 @@ authors:
     family-names: Kingsman
     email: jack.kingsman@gmail.com
     orcid: 'https://orcid.org/0009-0003-7942-8922'
+identifiers:
+  - type: doi
+    value: 10.13140/RG.2.2.28778.32964
 repository-code: 'https://github.com/jkingsman/JSON-QAnon'
 repository: 'https://www.kaggle.com/datasets/jkingsman/qanondrops'
 abstract: JSON and YAML representations of all QAnon drops.
