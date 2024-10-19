@@ -4,6 +4,12 @@
 
 `posts.json` contains all QAnon posts as scraped from https://qposts.online as of 2022-12-19. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`). I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 4k posts so caveat emptor; I make no guarantees of data integrity.
 
+## Important Note
+
+https://qposts.online appears to be offline as of 2024. However, in the event of future drops, this repo will be kept up to date and potentially have its codebase updated to support future scraping. As-is, this represents an up-to-date snapshot of Q-Anon posts as of 2024-10 despite the generation code no longer functioning.
+
+## Documentation and Context
+
 Posts reference images which I have opted not to include in this repo due to their distasteful content; the text is already quite enough and then some. You should be able to download the images with the mirror script below if you so desire; the `file` in `images` refers to the filename of the image as referred to by https://qposts.online at the time of indexing. There are about 800MB of images. I cannot speak to the durability of these image filename references but they will be accurate if you run the extraction yourself (i.e. if the file naming scheme is changed, this script will pick it up).
 
 _N.B.: The script as-is will consolidate links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` becomes `https://twitter.com/`). As far as I can tell, Q's original posts contained these spaces; I elected to remove them for the sake of functioning links. If you want this whitespace left untouched, you can set `KEEP_ORIGINAL_WHITESPACE` to `True` and the script will make no attempts at coercing them into well-formed links._
@@ -109,3 +115,18 @@ I provide this data for data analysis use only; the content is distasteful and m
 The site itself is laid out mostly logically in terms of HTML and formatting so I have high hopes for consistency over time as it pertains to the screen scraping, but should it change dramatically, this extraction script will obviously break. I've tried to lay the script out as modularly as I can so that updates can be made with a reasonable amount of effort but I make no guarantees of durability, nor that I will have time or interest to update the script to stay current, to be brutally honest.
 
 The code in my extraction script is licensed under MIT (and please cite me if my script or its results is utilized as part of academic research -- I'd love to read a preprint!); as the extracted posts are not my content, I cannot license them in any degree.
+
+## Cite this work
+
+If you use JSON-QAnon in a paper, check out the CITATION.cff file for the correct citation.
+
+```bibtex
+@misc{JSON-QANON,
+title={JSON-QAnon},
+author={Kingsman, Jack},
+year={2023},
+url={https://github.com/jkingsman/JSON-QAnon},
+month={Jan},
+note={{\url{https://www.kaggle.com/datasets/jkingsman/qanondrops}}}
+}
+```

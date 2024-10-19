@@ -1,0 +1,22 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: JSON-QAnon
+message: >-
+  If you use this dataset, please cite it using the metadata
+  from this file.
+type: dataset
+authors:
+  - given-names: Jack
+    family-names: Kingsman
+    email: jack.kingsman@gmail.com
+    orcid: 'https://orcid.org/0009-0003-7942-8922'
+repository-code: 'https://github.com/jkingsman/JSON-QAnon'
+repository: 'https://www.kaggle.com/datasets/jkingsman/qanondrops'
+abstract: JSON and YAML representations of all QAnon drops.
+keywords:
+  - QAnon
+  - Q-Anon
+  - conspiracy
+license: MIT
