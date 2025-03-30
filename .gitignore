@@ -1,5 +1,6 @@
 .DS_Store
 venv/
 qposts.online/
+ancillary/
 images/
 aggregated.txt

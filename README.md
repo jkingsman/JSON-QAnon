@@ -2,17 +2,29 @@
 
 # QAnon Post Dataset
 
-`posts.json` contains all QAnon posts as scraped from https://qposts.online as of 2022-12-19. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`). I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 4k posts so caveat emptor; I make no guarantees of data integrity.
+`posts.json` contains all QAnon posts as collated from multiple sources, up to the most recent drop on 2022-11-27. The JSON has been dumped with `ensure_ascii=False` so should be UTF-8 but there may be some encoding gotchas I haven't caught (`text` fields contain text with line breaks as literal `\n`). I did my best in terms of avoiding capture glitches/bad logic but I didn't read through all 5k posts so caveat emptor; I make no guarantees of data integrity.
 
-## Important Note
+## Important Notes
 
-https://qposts.online appears to be offline as of 2024. However, in the event of future drops, this repo will be kept up to date and potentially have its codebase updated to support future scraping. As-is, this represents an up-to-date snapshot of Q-Anon posts as of 2024-10 despite the generation code no longer functioning. If you archived the whole site to capture images, those references will still work with your local copy and `viewer.html`. If you did not capture the images, you can generally find them on various sites around the web that archive Q content.
+Posts reference images which I have opted not to include in this repo due to their distasteful content; the text is already quite enough and then some. As the original site I scraped the images from is down, you may no longer scrape the images directly yourself. The original filenames of the images are included in the dump, and they can often be found around the web.
 
-## Documentation and Context
+If you are an academic researcher and can prove it (a university email is table stakes; a university email with a link to your page on a sociology department webpage or equivalant, all the better), you may contact me and I may, at my discretion, provide you with my image scrape archive. Emails which do not unequivocally establish academic credentials and a reasonable, contextualized need for the content will not receive a response. I'm in the business of helping science understand whatever this mess was and what it did to our culture, not in spreading the word to acolytes.
 
-Posts reference images which I have opted not to include in this repo due to their distasteful content; the text is already quite enough and then some. ~~You should be able to download the images with the mirror script below if you so desire; the `file` in `images` refers to the filename of the image as referred to by https://qposts.online at the time of indexing. There are about 800MB of images.~~ As the original site is down, you may no longer scrape the images directly. If you are an academic researcher and can prove it (a university email is table stakes; a university email with a link to your page on a sociology department webpage or equivalant, all the better), you may contact me and I may, at my discretion, provide you with my archive. Emails which do not unequivocally establish academic credentials and a reasonable, contextualized need for the content will not receive a response.
+The `collate.py` script *prior to this commit* consolidated links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` became `https://twitter.com/`). As far as I can tell, Q's original posts contained these spaces; I previously elected to remove them for the sake of functioning links. As the source material is becoming increasingly difficult to find, I've elected to represent these links faithfully to the original, although they result in broken links. If you want to fix them yourself, the following regexes (provided for bash/shell) should do it.
 
-_N.B.: The script as-is will consolidate links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` becomes `https://twitter.com/`). As far as I can tell, Q's original posts contained these spaces; I elected to remove them for the sake of functioning links. If you want this whitespace left untouched, you can set `KEEP_ORIGINAL_WHITESPACE` to `True` and the script will make no attempts at coercing them into well-formed links._
+```bash
+# Remove spaces after http://
+sed -i 's|http://\s\+|http://|g' posts.json
+
+# Remove spaces after https://
+sed -i 's|https://\s\+|https://|g' posts.json
+
+# Fix specific spaced URLs
+sed -i 's|twitter\. com|twitter.com|g' posts.json
+sed -i 's|theguardian\. com|theguardian.com|g' posts.json
+```
+
+Prior to the commit introducing this change, there were instructions for running the scrape yourself. As the source site has gone down, those instructions have been removed from the README; please view them in the git history if they are relevant to your work.
 
 ### HTML Viewer
 
@@ -90,39 +102,11 @@ for post in data['posts']:
     print(post['text'])
 ```
 
-## Do it Yourself
-
-> *Note that this is mostly irrelevant now as the original site that the scraper was build on is down!*
-
-Took me about two hours for a total mirror on a terrible hotel wifi using a one second pause between requests; yours will probably go much faster on good internet (but remember to be a good netizen and rate limit requests, especially to a non-API. Depending on how low of a profile you want to keep, bump up the `--wait=1` option higher to wait more than one second between each request).
-
-To run your own extraction, mirror the site, update `DIRECTORY` in `collate.py` to point at the HTML location after mirroring, enter a `venv` and install the `requirements.txt`, then let it rip. It will dump the results as a JSON array to `posts.json` (should take a few seconds).
-
-```bash
-# repo clone
-git clone git@github.com:jkingsman/JSON-QAnon.git
-cd JSON-QAnon
-
-# setup + installation
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-chmod +x collate.py
-
-# site mirroring
-# note that you'll need to remove the rejected image formats if you also want to archive the images
-wget --wait=1 --level=inf --recursive --page-requisites --no-parent --reject css,js,json,ico,svg,jpg,jpeg,png --convert-links --adjust-extension --no-clobber --restrict-file-names=windows -e robots=off https://qposts.online/
-
-# collation; results in posts.json
-# remember to update DIRECTORY if the posts aren't in ./qposts.online/page relative to the script
-./collate.py
-```
-
 ## Fine Print
 
 I provide this data for data analysis use only; the content is distasteful and misleading to put it charitably and I do not endorse it.
 
-~~The site itself is laid out mostly logically in terms of HTML and formatting so I have high hopes for consistency over time as it pertains to the screen scraping, but should it change dramatically, this extraction script will obviously break. I've tried to lay the script out as modularly as I can so that updates can be made with a reasonable amount of effort but I make no guarantees of durability, nor that I will have time or interest to update the script to stay current, to be brutally honest.~~ The extraction script is permanently broken because the source site went down.
+There are no warranties of fitness for purpose or correctness of the this data -- I've done a best effort collation, and I make no guarantees my work is correct or complete.
 
 The code in my extraction script and any other original components of this repo are licensed under MIT (and please cite me if my script or its results is utilized as part of academic research -- I'd love to read a preprint!); as the extracted posts are not my content, I cannot license them in any degree.
 

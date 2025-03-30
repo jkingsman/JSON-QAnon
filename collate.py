@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# This file is no longer functional as the site has gone down; it is retained for historical purposes only.
+
 import copy
 import json
 import os
@@ -12,7 +14,7 @@ import yaml
 PAGES_DIRECTORY = 'qposts.online/page'
 
 # when False, trim stray whitepaces from links in posts+refs; see explanation in clean_up_raw_text()
-KEEP_ORIGINAL_WHITESPACE = False
+KEEP_ORIGINAL_WHITESPACE = True
 
 
 def extract_metadata_block(meta_block):
