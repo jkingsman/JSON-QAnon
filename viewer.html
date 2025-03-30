@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Q Posts Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .post {
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin-bottom: 1em;
+      background-color: #fff;
+      border-radius: 6px;
+    }
+    .post-metadata {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .post-text {
+      white-space: pre-line;
+      margin-top: 1em;
+    }
+    .post-images {
+      margin-top: 1em;
+    }
+    .post-images figure {
+      display: inline-block;
+      margin: 0.5em;
+      max-width: 300px;
+    }
+    .post-images img, .post-images video {
+      max-width: 100%;
+      display: block;
+    }
+    .post-images figcaption {
+      font-size: 0.8em;
+      color: #555;
+      text-align: center;
+      margin-top: 0.3em;
+    }
+    .referenced-post {
+      border-top: 1px dashed #aaa;
+      margin-top: 1em;
+      padding-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Q Posts Viewer</h1>
+  <div id="posts-container">Loading posts...</div>
+
+  <script>
+    const IMAGE_BASE = './images';
+
+    function formatDate(epochTime) {
+      const options = {
+        timeZone: 'America/New_York',
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        timeZoneName: 'short'
+      };
+      return new Date(epochTime * 1000).toLocaleString('en-US', options);
+    }
+
+    function createMediaElement(media) {
+      const figure = document.createElement('figure');
+      const extension = media.file.split('.').pop().toLowerCase();
+
+      if (['mp4', 'webm', 'ogg'].includes(extension)) {
+        const video = document.createElement('video');
+        video.src = `${IMAGE_BASE}/${media.file}`;
+        video.controls = true;
+        video.title = media.name;
+        figure.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = `${IMAGE_BASE}/${media.file}`;
+        img.alt = media.name;
+        img.title = media.name;
+
+        const imgLink = document.createElement('a');
+        imgLink.href = `${IMAGE_BASE}/${media.file}`;
+        imgLink.target = '_blank';
+        imgLink.appendChild(img);
+
+        figure.appendChild(imgLink);
+      }
+
+      const caption = document.createElement('figcaption');
+      caption.textContent = media.name;
+      figure.appendChild(caption);
+
+      return figure;
+    }
+
+    function renderPost(post) {
+      const postDiv = document.createElement('div');
+      postDiv.className = 'post';
+
+      const metadata = post.post_metadata;
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'post-metadata';
+      const formattedTime = formatDate(metadata.time);
+      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} on <span title="${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}]`;
+      if (metadata.source.link) {
+        const link = document.createElement('a');
+        link.href = metadata.source.link;
+        link.target = '_blank';
+        link.textContent = '(Source)';
+        metaDiv.appendChild(document.createTextNode(' '));
+        metaDiv.appendChild(link);
+      }
+      postDiv.appendChild(metaDiv);
+
+      if (post.text) {
+        const textDiv = document.createElement('div');
+        textDiv.className = 'post-text';
+        textDiv.textContent = post.text.replace(/\\n/g, '\n');
+        postDiv.appendChild(textDiv);
+      }
+
+      if (post.images) {
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'post-images';
+        post.images.forEach(image => {
+          imageContainer.appendChild(createMediaElement(image));
+        });
+        postDiv.appendChild(imageContainer);
+      }
+
+      if (post.referenced_posts) {
+        post.referenced_posts.forEach(ref => {
+          const refDiv = document.createElement('div');
+          refDiv.className = 'referenced-post';
+          if (ref.reference) {
+            const refText = document.createElement('strong');
+            refText.textContent = `Referenced: ${ref.reference}`;
+            refDiv.appendChild(refText);
+          }
+          if (ref.text) {
+            const refTextBlock = document.createElement('div');
+            refTextBlock.style.whiteSpace = 'pre-line';
+            refTextBlock.textContent = ref.text.replace(/\\n/g, '\n');
+            refDiv.appendChild(refTextBlock);
+          }
+          if (ref.images) {
+            const refImageContainer = document.createElement('div');
+            refImageContainer.className = 'post-images';
+            ref.images.forEach(image => {
+              refImageContainer.appendChild(createMediaElement(image));
+            });
+            refDiv.appendChild(refImageContainer);
+          }
+          postDiv.appendChild(refDiv);
+        });
+      }
+
+      return postDiv;
+    }
+
+    function renderPosts(postsJson) {
+      const container = document.getElementById('posts-container');
+      container.innerHTML = '';
+      postsJson.posts.forEach(post => {
+        container.appendChild(renderPost(post));
+      });
+    }
+
+    async function fetchAndRenderPosts() {
+      try {
+        const response = await fetch('posts.json');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        renderPosts(data);
+      } catch (error) {
+        console.error('Failed to load posts.json:', error);
+        const container = document.getElementById('posts-container');
+        container.innerHTML = 'Failed to load posts. Because this dynamically loads the JSON file, it will not work unless actively served from a web server. Try using a local server by running <code>python3 -m http.server 8000</code>, then checking <a href="http://localhost:8000/viewer.html">http://localhost:8000/viewer.html</a>.';
+      }
+    }
+
+    // Check if we're in a static HTML save
+    if (document.getElementById('posts-container').innerText.length > 100) {
+      document.getElementById('posts-container').prepend(document.createElement('hr'));
+      document.getElementById('posts-container').prepend(document.createElement('p').innerText = 'Posts detected as already loaded; not attempting to fetch.');
+    } else {
+        fetchAndRenderPosts();
+    }
+  </script>
+</body>
+</html>
