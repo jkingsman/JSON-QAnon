@@ -1,0 +1,147 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "posts"
+    ],
+    "properties": {
+        "posts": {
+            "type": "array",
+            "description": "An array of post objects",
+            "items": {
+                "type": "object",
+                "required": [
+                    "post_metadata"
+                ],
+                "properties": {
+                    "post_metadata": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "author",
+                            "author_id",
+                            "source",
+                            "time"
+                        ],
+                        "description": "Miscellaneous information about the post",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "The numerical ID of the post (sequentially from 1 forwards in time; generated and not present on original posts)"
+                            },
+                            "author": {
+                                "type": "string",
+                                "description": "The author of the post; usually 'Q' or 'Anonymous'"
+                            },
+                            "author_id": {
+                                "type": "string",
+                                "description": "AKA 'poster ID' -- a numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information"
+                            },
+                            "source": {
+                                "type": "object",
+                                "required": [
+                                    "board",
+                                    "site"
+                                ],
+                                "description": "Information about the post's origin",
+                                "properties": {
+                                    "board": {
+                                        "type": "string",
+                                        "description": "The chan board the post came from"
+                                    },
+                                    "site": {
+                                        "type": "string",
+                                        "enum": [
+                                            "4ch",
+                                            "8ch",
+                                            "8kun"
+                                        ],
+                                        "description": "Indicates the site the post is from (4chan, 8chan, or 8kun)"
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "description": "Link to the original post"
+                                    }
+                                }
+                            },
+                            "time": {
+                                "type": "integer",
+                                "description": "Epoch timestamp of posting time"
+                            }
+                        }
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "The text of the post with newlines delimited by literal '\\n'"
+                    },
+                    "images": {
+                        "type": "array",
+                        "description": "An array of objects indicating images used in the post",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "file",
+                                "name"
+                            ],
+                            "properties": {
+                                "file": {
+                                    "type": "string",
+                                    "description": "The name of the image file itself as archived from https://qposts.online (now defunct)"
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "description": "The name of the image as it was named when posted to the image board"
+                                }
+                            }
+                        }
+                    },
+                    "referenced_posts": {
+                        "type": "array",
+                        "description": "An array of objects indicating replied-to posts within Q's post (i.e. '>>8251669')",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "reference"
+                            ],
+                            "properties": {
+                                "reference": {
+                                    "type": "string",
+                                    "description": "The string within the text of the main post that referred to this one"
+                                },
+                                "text": {
+                                    "type": "string",
+                                    "description": "The text of the referenced post with newlines delimited by literal '\\n'"
+                                },
+                                "author_id": {
+                                    "type": "string",
+                                    "description": "AKA 'poster ID' -- a numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information"
+                                },
+                                "images": {
+                                    "type": "array",
+                                    "description": "An array of objects indicating images used in the post",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "file",
+                                            "name"
+                                        ],
+                                        "properties": {
+                                            "file": {
+                                                "type": "string",
+                                                "description": "The name of the image file itself as archived from https://qposts.online (now defunct)"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "The name of the image as it was named when posted to the image board"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

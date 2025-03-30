@@ -106,7 +106,7 @@
       const metaDiv = document.createElement('div');
       metaDiv.className = 'post-metadata';
       const formattedTime = formatDate(metadata.time);
-      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} on <span title="${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}]`;
+      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [ID: ${metadata.author_id}] on <span title="${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}]`;
       if (metadata.source.link) {
         const link = document.createElement('a');
         link.href = metadata.source.link;
@@ -139,7 +139,7 @@
           refDiv.className = 'referenced-post';
           if (ref.reference) {
             const refText = document.createElement('strong');
-            refText.textContent = `Referenced: ${ref.reference}`;
+            refText.textContent = `Referenced: ${ref.reference} [ID: ${ref.author_id}]`;
             refDiv.appendChild(refText);
           }
           if (ref.text) {
