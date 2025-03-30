@@ -7,7 +7,6 @@
     "properties": {
         "posts": {
             "type": "array",
-            "description": "An array of post objects",
             "items": {
                 "type": "object",
                 "required": [
@@ -23,11 +22,10 @@
                             "source",
                             "time"
                         ],
-                        "description": "Miscellaneous information about the post",
                         "properties": {
                             "id": {
                                 "type": "integer",
-                                "description": "The numerical ID of the post (sequentially from 1 forwards in time; generated and not present on original posts)"
+                                "description": "The ordinal ID of the post (sequentially from 1 forwards in time; generated and not present on original posts)"
                             },
                             "author": {
                                 "type": "string",
@@ -35,7 +33,11 @@
                             },
                             "author_id": {
                                 "type": "string",
-                                "description": "AKA 'poster ID' -- a numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information"
+                                "description": "A numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information by the board it was posted on"
+                            },
+                            "tripcode": {
+                                "type": "string",
+                                "description": "The tripcode of the post, if included"
                             },
                             "source": {
                                 "type": "object",
@@ -43,7 +45,6 @@
                                     "board",
                                     "site"
                                 ],
-                                "description": "Information about the post's origin",
                                 "properties": {
                                     "board": {
                                         "type": "string",
@@ -56,7 +57,7 @@
                                             "8ch",
                                             "8kun"
                                         ],
-                                        "description": "Indicates the site the post is from (4chan, 8chan, or 8kun)"
+                                        "description": "The site the post is from (4chan, 8chan, or 8kun)"
                                     },
                                     "link": {
                                         "type": "string",
@@ -76,7 +77,6 @@
                     },
                     "images": {
                         "type": "array",
-                        "description": "An array of objects indicating images used in the post",
                         "items": {
                             "type": "object",
                             "required": [
@@ -97,7 +97,6 @@
                     },
                     "referenced_posts": {
                         "type": "array",
-                        "description": "An array of objects indicating replied-to posts within Q's post (i.e. '>>8251669')",
                         "items": {
                             "type": "object",
                             "required": [
@@ -106,7 +105,7 @@
                             "properties": {
                                 "reference": {
                                     "type": "string",
-                                    "description": "The string within the text of the main post that referred to this one"
+                                    "description": "The string within the 'text' of the main post that referred to this one"
                                 },
                                 "text": {
                                     "type": "string",
@@ -114,11 +113,10 @@
                                 },
                                 "author_id": {
                                     "type": "string",
-                                    "description": "AKA 'poster ID' -- a numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information"
+                                    "description": "A numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information"
                                 },
                                 "images": {
                                     "type": "array",
-                                    "description": "An array of objects indicating images used in the post",
                                     "items": {
                                         "type": "object",
                                         "required": [

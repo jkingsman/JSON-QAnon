@@ -59,6 +59,7 @@ A post consists of:
   * `id`: the ordinal ID of the post (sequentially from 1 forwards in time; generated and not present on original posts) (integer)
   * `author`: the author of the post; usually `Q` or `Anonymous` (string)
   * `author_id`: AKA "poster ID" -- a numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information by the board it was posted on (string)
+  * `tripcode`: the tripcode of the post, if invluded (string, optional)
   * `source`: an object containing information about the post's origin (object)
     * `board`: the chan board the post came from (string)
     * `site`: one of `4ch`, `8ch`, or `8kun`, indicating the site the post is from (4chan, 8chan, or 8kun) (string)
