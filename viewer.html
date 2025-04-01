@@ -48,6 +48,11 @@
       margin-top: 1em;
       padding-top: 1em;
     }
+    .pill {
+      background-color: hsl(87, 61%, 90%);
+      border-radius: 8px;
+      padding: 1px 5px 1px 5px;
+    }
   </style>
 </head>
 <body>
@@ -65,6 +70,24 @@
         timeZoneName: 'short'
       };
       return new Date(epochTime * 1000).toLocaleString('en-US', options);
+    }
+
+    function stringToHslColor(str) {
+      // If empty string, return a default color
+      if (!str) return "hsl(0, 60%, 85%)";
+      if (str == '000000') return "hsl(0, 0%, 85%)";
+
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash = hash & hash;
+      }
+
+      const hue = Math.abs(hash % 360);
+      const saturation = 60 + Math.abs((hash >> 8) % 41);
+      const lightness = 70 + Math.abs((hash >> 16) % 31);
+
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
 
     function createMediaElement(media) {
@@ -106,7 +129,14 @@
       const metaDiv = document.createElement('div');
       metaDiv.className = 'post-metadata';
       const formattedTime = formatDate(metadata.time);
-      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [ID: ${metadata.author_id}] on <span title="${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}]`;
+
+      let id = `ID: <span class="pill" style="background-color: ${stringToHslColor(metadata.author_id)}">${metadata.author_id}</span>`;
+      let tripcode = '';
+      if ('tripcode' in metadata) {
+        tripcode = metadata.tripcode ? ` | Tripcode: <span class="pill" style="background-color: ${stringToHslColor(metadata.tripcode)}">${metadata.tripcode}</span>` : '';
+      }
+
+      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [${id}${tripcode}] on <span title="Unix epoch: ${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}]`;
       if (metadata.source.link) {
         const link = document.createElement('a');
         link.href = metadata.source.link;
