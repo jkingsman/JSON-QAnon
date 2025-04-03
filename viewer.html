@@ -47,6 +47,7 @@
       border-top: 1px dashed #aaa;
       margin-top: 1em;
       padding-top: 1em;
+      margin-left: 3em;
     }
     .pill {
       background-color: hsl(87, 61%, 90%);
@@ -164,12 +165,16 @@
       }
 
       if (post.referenced_posts) {
+        const header = document.createElement('h2');
+        header.textContent = 'Referenced Posts';
+        postDiv.appendChild(header);
+
         post.referenced_posts.forEach(ref => {
           const refDiv = document.createElement('div');
           refDiv.className = 'referenced-post';
           if (ref.reference) {
-            const refText = document.createElement('strong');
-            refText.textContent = `Referenced: ${ref.reference} [ID: ${ref.author_id}]`;
+            const refText = document.createElement('p');
+            refText.innerHTML = `Post: ${ref.reference.replace(/\D/g,'')} | Author ID: <span class="pill" style="background-color: ${stringToHslColor(ref.author_id)}">${ref.author_id}</span>`;
             refDiv.appendChild(refText);
           }
           if (ref.text) {
