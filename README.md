@@ -22,7 +22,7 @@ If you are an academic researcher and can prove valid research interest (a unive
 
 ...and represents posts accurately to original posting.
 
-The `collate.py` script *prior to the commit which introduced this paragraph* consolidated links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` became `https://twitter.com/`). As far as I can tell, Q's original posts contained these spaces; I previously elected to remove them for the sake of functioning links. As the source material is becoming increasingly difficult to find, I've elected to currently represent these links faithfully to the original, although they result in broken links.
+The `collate.py` script *prior to the commit which introduced this paragraph* consolidated links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` became `https://twitter.com/`). Q's original posts contained these spaces; I previously elected to remove them for the sake of functioning links. As the source material is becoming increasingly difficult to find, I've elected to currently represent these links faithfully to the original, although they result in broken links.
 
 If you want fixed versions, use `posts.url-normalized.json` or `posts.url-normalized.yml` which have had the following regexes applied:
 
