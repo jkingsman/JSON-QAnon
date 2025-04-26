@@ -43,7 +43,7 @@ Prior to the commit introducing this paragraph, there were instructions for runn
 
 ## HTML Viewer
 
-`viewer.html` will render a simple display of all posts with their basic information *when served from a web server*. This dynamically generates the page from `posts.json`, so __needs to be actively served by a web server that can also handle requests for the JSON__ (and optionally the images, if you've scraped them from https://qposts.online before it went down). Python can do a simple web server of its current folder, so quick and dirty is to open a terminal in this repo's folder and run `python3 -m http.server 8000` which will make it accessible at http://localhost:8000.
+`viewer.html` will render a simple display of all posts with their basic information. This page utilizes `posts.js` which is simply `posts.json` assigned to the variable `QPOSTS`. This page will optionally serve the images if you scraped them from https://qposts.online before it went down.
 
 If you have the images scraped from https://qposts.online, the location the script expects to find them in is in `IMAGE_BASE`.  If your location isn't `./images`, change it in the JS. If you don't have images, they'll just fail to render and not affect the rest of the display. Again, if you didn't scrape the sources in the early days of this repo, this door is unfortunately shut for you. See above under `Important Notes` for access if you are an academic researcher.
 

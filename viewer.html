@@ -60,6 +60,7 @@
   <h1>Q Posts Viewer</h1>
   <div id="posts-container">Loading posts...</div>
 
+  <script type="text/javascript" src="posts.js"></script>
   <script>
     const IMAGE_BASE = './images';
 
@@ -206,26 +207,7 @@
       });
     }
 
-    async function fetchAndRenderPosts() {
-      try {
-        const response = await fetch('posts.json');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        renderPosts(data);
-      } catch (error) {
-        console.error('Failed to load posts.json:', error);
-        const container = document.getElementById('posts-container');
-        container.innerHTML = 'Failed to load posts. Because this dynamically loads the JSON file, it will not work unless actively served from a web server. Try using a local server by running <code>python3 -m http.server 8000</code>, then checking <a href="http://localhost:8000/viewer.html">http://localhost:8000/viewer.html</a>.';
-      }
-    }
-
-    // Check if we're in a static HTML save
-    if (document.getElementById('posts-container').innerText.length > 100) {
-      document.getElementById('posts-container').prepend(document.createElement('hr'));
-      document.getElementById('posts-container').prepend(document.createElement('p').innerText = 'Posts detected as already loaded; not attempting to fetch.');
-    } else {
-        fetchAndRenderPosts();
-    }
+    renderPosts(QPOSTS);
   </script>
 </body>
 </html>
