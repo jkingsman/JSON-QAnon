@@ -207,7 +207,13 @@
       });
     }
 
-    renderPosts(QPOSTS);
+
+    if (document.getElementById('posts-container').innerText.length > 100) {
+      document.getElementById('posts-container').prepend(document.createElement('hr'));
+      document.getElementById('posts-container').prepend(document.createElement('p').innerText = 'Posts detected as already loaded; not attempting to fetch.');
+    } else {
+      renderPosts(QPOSTS);
+    }
   </script>
 </body>
 </html>
