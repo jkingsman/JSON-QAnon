@@ -16,13 +16,13 @@ The `collate.py` script originally parsed a scraped copy of https://qposts.onlin
 
 Posts reference images which I have opted not to include in this repo due to their distasteful content; the text is already quite enough and then some. As the original site I scraped the images from is down, you may no longer scrape the images directly yourself. The original filenames of the images both as published by Q and as found on the original source archive are included in the dump, and they can often be found around the web.
 
-If you are an academic researcher and can prove valid research interest (a university email is table stakes; a university email with a link to your page on a sociology department webpage, current relevant research focus, or equivalant proof of research beyond "I'm a college student please give me Q content", all the better), you may contact me and I may, at my discretion, provide you with my image scrape archive. Emails which do not unequivocally establish academic credentials and a reasonable, contextualized need for the content will not receive a response.
+If you are an academic researcher and can prove valid research interest (a university email is table stakes; a university email with a link to your page on a sociology department webpage, current relevant research focus, or equivalent proof of research beyond "I'm a college student please give me Q content", all the better), you may contact me and I may, at my discretion, provide you with my image scrape archive. Emails which do not unequivocally establish academic credentials and a reasonable, contextualized need for the content will not receive a response.
 
 ### `posts.json` used to fix URLS; now it doesn't
 
 ...and represents posts accurately to original posting.
 
-The `collate.py` script *prior to the commit which introduced this paragraph* consolidated links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` became `https://twitter.com/`). As far as I can tell, Q's original posts contained these spaces; I previously elected to remove them for the sake of functioning links. As the source material is becoming increasingly difficult to find, I've elected to currently represent these links faithfully to the original, although they result in broken links.
+The `collate.py` script *prior to the commit which introduced this paragraph* consolidated links with spaces in the middle (making them invalid) into links without spaces (for example `https:// twitter. com/` became `https://twitter.com/`). Q's original posts contained these spaces; I previously elected to remove them for the sake of functioning links. As the source material is becoming increasingly difficult to find, I've elected to currently represent these links faithfully to the original, although they result in broken links.
 
 If you want fixed versions, use `posts.url-normalized.json` or `posts.url-normalized.yml` which have had the following regexes applied:
 
@@ -59,7 +59,7 @@ A post consists of:
   * `id`: the ordinal ID of the post (sequentially from 1 forwards in time; generated and not present on original posts) (integer)
   * `author`: the author of the post; usually `Q` or `Anonymous` (string)
   * `author_id`: AKA "poster ID" -- a numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information by the board it was posted on (string)
-  * `tripcode`: the tripcode of the post, if invluded (string, optional)
+  * `tripcode`: the tripcode of the post, if included (string, optional)
   * `source`: an object containing information about the post's origin (object)
     * `board`: the chan board the post came from (string)
     * `site`: one of `4ch`, `8ch`, or `8kun`, indicating the site the post is from (4chan, 8chan, or 8kun) (string)
