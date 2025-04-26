@@ -145,3 +145,9 @@ doi="10.13140/RG.2.2.28778.32964",
 note={{\url{https://www.kaggle.com/datasets/jkingsman/qanondrops}}}
 }
 ```
+
+### Citations
+
+* Eames, William J., III. "Changing Tides: Online Conspiracy Theory Use by Radical Violent Extremist Groups Over Time." Master's thesis, University of North Florida, 2023.
+* Olson, Liz. "From 4-chan to the Capitol: A Text-as-Data Analysis of QAnon." Student paper, Columbia School of International and Public Affairs, April 2021.
+* Thuland, Tora. "01chan.org." Art and Machine Learning project, Tisch School of the Arts, New York University, 2022. Previously available at https://www.00110000chan.org/. Information available at https://itp.nyu.edu/thesis2022/?tora-thuland.
