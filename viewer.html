@@ -20,6 +20,12 @@
     .post-metadata {
       font-size: 0.9em;
       color: #666;
+      margin-bottom: 0.5em;
+    }
+    .referenced-post-metadata {
+      font-size: 0.85em;
+      color: #666;
+      margin-bottom: 0.5em;
     }
     .post-text {
       white-space: pre-line;
@@ -117,7 +123,7 @@
       }
 
       const caption = document.createElement('figcaption');
-      caption.textContent = media.name;
+      caption.innerHTML = `${media.name}<br><span style="font-size: 0.9em; color: #888;">${media.file}</span>`;
       figure.appendChild(caption);
 
       return figure;
@@ -132,18 +138,12 @@
       metaDiv.className = 'post-metadata';
       const formattedTime = formatDate(metadata.time);
 
-      let id = `ID: <span class="pill" style="background-color: ${stringToHslColor(metadata.author_id)}">${metadata.author_id}</span>`;
-      let tripcode = '';
-      if ('tripcode' in metadata) {
-        tripcode = metadata.tripcode ? ` | Tripcode: <span class="pill" style="background-color: ${stringToHslColor(metadata.tripcode)}">${metadata.tripcode}</span>` : '';
+      let authorInfo = `Author ID: <span class="pill" style="background-color: ${stringToHslColor(metadata.author_id)}">${metadata.author_id}</span>`;
+      if (metadata.tripcode) {
+        authorInfo += ` | Tripcode: <span class="pill" style="background-color: ${stringToHslColor(metadata.tripcode)}">${metadata.tripcode}</span>`;
       }
 
-      let postId = '';
-      if ('post_id' in metadata) {
-        postId = ` | Post ID: ${metadata.post_id}`;
-      }
-
-      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [${id}${tripcode}] on <span title="Unix epoch: ${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}${postId}]`;
+      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [${authorInfo}] on <span title="Unix epoch: ${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board} | Post ID: ${metadata.post_id}]`;
       if (metadata.source.link) {
         const link = document.createElement('a');
         link.href = metadata.source.link;
@@ -178,41 +178,29 @@
         post.referenced_posts.forEach(ref => {
           const refDiv = document.createElement('div');
           refDiv.className = 'referenced-post';
-          if (ref.reference) {
-            const refText = document.createElement('p');
 
-            // Use ref.post_id if available, otherwise extract from reference string
-            const postIdDisplay = ref.post_id || ref.reference.replace(/\D/g,'');
+          const refMetaDiv = document.createElement('div');
+          refMetaDiv.className = 'referenced-post-metadata';
 
-            let refMetaHtml = `Post: ${ref.reference} (ID: ${postIdDisplay})`;
+          const refFormattedTime = formatDate(ref.time);
+          refMetaDiv.innerHTML = `${ref.reference} (Post ID: ${ref.post_id}) [Author ID: <span class="pill" style="background-color: ${stringToHslColor(ref.author_id)}">${ref.author_id}</span>] on <span title="Unix epoch: ${ref.time}">${refFormattedTime}</span>`;
 
-            if (ref.author_id) {
-              refMetaHtml += ` | Author ID: <span class="pill" style="background-color: ${stringToHslColor(ref.author_id)}">${ref.author_id}</span>`;
-            }
+          const refLink = document.createElement('a');
+          refLink.href = ref.link;
+          refLink.target = '_blank';
+          refLink.textContent = '(Source)';
+          refMetaDiv.appendChild(document.createTextNode(' '));
+          refMetaDiv.appendChild(refLink);
 
-            if (ref.time) {
-              const refFormattedTime = formatDate(ref.time);
-              refMetaHtml += ` | Posted: <span title="Unix epoch: ${ref.time}">${refFormattedTime}</span>`;
-            }
+          refDiv.appendChild(refMetaDiv);
 
-            refText.innerHTML = refMetaHtml;
-
-            if (ref.link) {
-              const refLink = document.createElement('a');
-              refLink.href = ref.link;
-              refLink.target = '_blank';
-              refLink.textContent = ' (Source)';
-              refText.appendChild(refLink);
-            }
-
-            refDiv.appendChild(refText);
-          }
           if (ref.text) {
             const refTextBlock = document.createElement('div');
             refTextBlock.style.whiteSpace = 'pre-line';
             refTextBlock.textContent = ref.text.replace(/\\n/g, '\n');
             refDiv.appendChild(refTextBlock);
           }
+
           if (ref.images) {
             const refImageContainer = document.createElement('div');
             refImageContainer.className = 'post-images';
@@ -221,6 +209,7 @@
             });
             refDiv.appendChild(refImageContainer);
           }
+
           postDiv.appendChild(refDiv);
         });
       }
