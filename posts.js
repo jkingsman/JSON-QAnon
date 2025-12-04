@@ -105396,7 +105396,7 @@ const QPOSTS = {
         {
           "reference": ">>17830253",
           "text": ">>17830238\nQ & A ?",
-          "author_id": "000000",
+          "author_id": "4595e5",
           "post_id": "17830253",
           "time": 1669597259,
           "link": "https://8kun.top/qresearch/res/17830133.html#17830253"
