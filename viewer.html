@@ -35,8 +35,8 @@
       margin-top: 1em;
     }
     .post-images figure {
-      display: inline-block;
-      margin: 0.5em;
+      display: block;
+      margin: 0.5em 0;
       max-width: 300px;
     }
     .post-images img, .post-images video {
@@ -50,10 +50,18 @@
       margin-top: 0.3em;
     }
     .referenced-post {
-      border-top: 1px dashed #aaa;
-      margin-top: 1em;
-      padding-top: 1em;
-      margin-left: 3em;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+      padding: 0.75em;
+      margin-top: 0.75em;
+      margin-left: 2em;
+      background-color: #fafafa;
+    }
+    .referenced-posts-header {
+      font-size: 1.2em;
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+      font-weight: normal;
     }
     .pill {
       background-color: hsl(87, 61%, 90%);
@@ -172,6 +180,7 @@
 
       if (post.referenced_posts) {
         const header = document.createElement('h2');
+        header.className = 'referenced-posts-header';
         header.textContent = 'Referenced Posts';
         postDiv.appendChild(header);
 
