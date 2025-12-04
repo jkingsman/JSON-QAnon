@@ -12,6 +12,7 @@
                 "required": [
                     "post_metadata"
                 ],
+                "additionalProperties": false,
                 "properties": {
                     "post_metadata": {
                         "type": "object",
@@ -19,21 +20,29 @@
                             "id",
                             "author",
                             "author_id",
+                            "post_id",
                             "source",
                             "time"
                         ],
+                        "additionalProperties": false,
                         "properties": {
                             "id": {
                                 "type": "integer",
-                                "description": "The ordinal ID of the post (sequentially from 1 forwards in time; generated and not present on original posts)"
+                                "minimum": 1,
+                                "description": "The ordinal ID of the post (sequentially from 1 (oldest) forwards in time; generated and not present on original posts)"
                             },
                             "author": {
                                 "type": "string",
                                 "description": "The author of the post; usually 'Q' or 'Anonymous'"
                             },
+                            "post_id": {
+                                "type": "string",
+                                "pattern": "^[0-9]+$",
+                                "description": "The ID of the post, sourced from the original site it was posted on."
+                            },
                             "author_id": {
                                 "type": "string",
-                                "description": "A numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information by the board it was posted on"
+                                "description": "A numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information by the board it was posted on. This may read 000000 for posts that didn't originally use that identification for Q posts."
                             },
                             "tripcode": {
                                 "type": "string",
@@ -43,11 +52,22 @@
                                 "type": "object",
                                 "required": [
                                     "board",
-                                    "site"
+                                    "site",
+                                    "link"
                                 ],
+                                "additionalProperties": false,
                                 "properties": {
                                     "board": {
                                         "type": "string",
+                                        "enum": [
+                                            "/cbts",
+                                            "/greatawakening",
+                                            "/patriotsfight",
+                                            "/pol",
+                                            "/projectdcomms",
+                                            "/qresearch",
+                                            "/thestorm"
+                                        ],
                                         "description": "The chan board the post came from"
                                     },
                                     "site": {
@@ -61,13 +81,14 @@
                                     },
                                     "link": {
                                         "type": "string",
-                                        "description": "Link to the original post"
+                                        "description": "Link to the original post, or an archival version as available in scrape sources. Not guaranteed to be live; use at your own risk."
                                     }
                                 }
                             },
                             "time": {
                                 "type": "integer",
-                                "description": "Epoch timestamp of posting time"
+                                "minimum": 1,
+                                "description": "Unix epoch timestamp of when the original post was made"
                             }
                         }
                     },
@@ -83,10 +104,11 @@
                                 "file",
                                 "name"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "file": {
                                     "type": "string",
-                                    "description": "The name of the image file itself as archived from https://qposts.online (now defunct)"
+                                    "description": "The name of the image file itself as archived from source board (as available)"
                                 },
                                 "name": {
                                     "type": "string",
@@ -100,12 +122,22 @@
                         "items": {
                             "type": "object",
                             "required": [
-                                "reference"
+                                "reference",
+                                "post_id",
+                                "author_id",
+                                "time",
+                                "link"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "reference": {
                                     "type": "string",
-                                    "description": "The string within the 'text' of the main post that referred to this one"
+                                    "description": "The string within the 'text' of the main post that referred to this one (typically post_id in >>12345678 format)"
+                                },
+                                "post_id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9]+$",
+                                    "description": "The ID of the referenced post"
                                 },
                                 "text": {
                                     "type": "string",
@@ -115,6 +147,15 @@
                                     "type": "string",
                                     "description": "A numerical identifier for a particular poster generated from a hash of the thread ID, the user's IP address, and other information"
                                 },
+                                "time": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "description": "Unix epoch timestamp of when the referenced post was made"
+                                },
+                                "link": {
+                                    "type": "string",
+                                    "description": "Link to the original referenced post, or an archival version as available in scrape sources. Not guaranteed to be live; use at your own risk."
+                                },
                                 "images": {
                                     "type": "array",
                                     "items": {
@@ -123,10 +164,11 @@
                                             "file",
                                             "name"
                                         ],
+                                        "additionalProperties": false,
                                         "properties": {
                                             "file": {
                                                 "type": "string",
-                                                "description": "The name of the image file itself as archived from https://qposts.online (now defunct)"
+                                                "description": "The name of the image file itself as archived from source board (as available)"
                                             },
                                             "name": {
                                                 "type": "string",

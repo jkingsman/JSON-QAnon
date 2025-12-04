@@ -10,7 +10,7 @@ type: dataset
 authors:
   - given-names: Jack
     family-names: Kingsman
-    email: jack.kingsman@gmail.com
+    email: jack@jackkingsman.me
     orcid: 'https://orcid.org/0009-0003-7942-8922'
 identifiers:
   - type: doi

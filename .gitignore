@@ -1,6 +1,5 @@
-.DS_Store
-venv/
-qposts.online/
-ancillary/
+sources/
 images/
-aggregated.txt
+viewer_export/
+generate_json.py
+generate_additional_formats.py

@@ -138,7 +138,12 @@
         tripcode = metadata.tripcode ? ` | Tripcode: <span class="pill" style="background-color: ${stringToHslColor(metadata.tripcode)}">${metadata.tripcode}</span>` : '';
       }
 
-      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [${id}${tripcode}] on <span title="Unix epoch: ${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}]`;
+      let postId = '';
+      if ('post_id' in metadata) {
+        postId = ` | Post ID: ${metadata.post_id}`;
+      }
+
+      metaDiv.innerHTML = `#${metadata.id} by ${metadata.author} [${id}${tripcode}] on <span title="Unix epoch: ${metadata.time}">${formattedTime}</span> [${metadata.source.site} | ${metadata.source.board}${postId}]`;
       if (metadata.source.link) {
         const link = document.createElement('a');
         link.href = metadata.source.link;
@@ -175,7 +180,31 @@
           refDiv.className = 'referenced-post';
           if (ref.reference) {
             const refText = document.createElement('p');
-            refText.innerHTML = `Post: ${ref.reference.replace(/\D/g,'')} | Author ID: <span class="pill" style="background-color: ${stringToHslColor(ref.author_id)}">${ref.author_id}</span>`;
+
+            // Use ref.post_id if available, otherwise extract from reference string
+            const postIdDisplay = ref.post_id || ref.reference.replace(/\D/g,'');
+
+            let refMetaHtml = `Post: ${ref.reference} (ID: ${postIdDisplay})`;
+
+            if (ref.author_id) {
+              refMetaHtml += ` | Author ID: <span class="pill" style="background-color: ${stringToHslColor(ref.author_id)}">${ref.author_id}</span>`;
+            }
+
+            if (ref.time) {
+              const refFormattedTime = formatDate(ref.time);
+              refMetaHtml += ` | Posted: <span title="Unix epoch: ${ref.time}">${refFormattedTime}</span>`;
+            }
+
+            refText.innerHTML = refMetaHtml;
+
+            if (ref.link) {
+              const refLink = document.createElement('a');
+              refLink.href = ref.link;
+              refLink.target = '_blank';
+              refLink.textContent = ' (Source)';
+              refText.appendChild(refLink);
+            }
+
             refDiv.appendChild(refText);
           }
           if (ref.text) {
